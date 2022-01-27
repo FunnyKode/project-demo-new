@@ -1,0 +1,54 @@
+name: Loading Env Varaibles
+on:
+  push:
+    branches:
+      - main
+      - dev
+      - stagge
+      - prod
+  pull_request:
+    branches:
+      - main
+      - dev
+      - stagge
+      - prod
+  workflow_call:
+    inputs:
+      username:
+        required: true
+        type: string
+    secrets:
+      ORGANISATION_TOKEN:
+        token: ${{ secrets.PERSONNAL_ACCESS_TOKEN }}
+
+jobs:
+  test-env:
+    if: ${{ github.ref == 'dev' }}
+    runs_on: ubuntu-latest
+    steps:
+      - run: echo "loading test deploy variables"
+      - name: Run loading
+        run: |
+          echo "REACT_APP_APIKEY=${{ secrets.ENV_APIKEY_DEV }}" >> $GITHUB_ENV
+          echo "REACT_APP_APPID=${{ secrets.ENV_APPID_DEV }}" >> $GITHUB_ENV
+          echo "REACT_APP_AUTHDOMAIN=${{ secrets.ENV_AUTHDOMAIN_DEV }}" >> $GITHUB_ENV
+          echo "REACT_APP_MEASUREMENTID=${{ secrets.ENV_MEASUREMENTID_DEV }}" >> $GITHUB_ENV
+          echo "REACT_APP_MESSANGINGSENDERID=${{ secrets.ENV_MESSANGINGSENDERID_DEV }}" >> $GITHUB_ENV
+          echo "REACT_APP_PROJECTID=${{ secrets.ENV_PROJECTID_DEV }}" >> $GITHUB_ENV
+          echo "REACT_APP_STORAGEBUCKET=${{ secrets.ENV_STORAGEBUCKET_DEV }}" >> $GITHUB_ENV
+      - run: echo "apiKey is ${{env.REACT_APP_APIKEY}} and authDomain is ${{env.REACT_APP_AUTHDOMAIN}}"
+  prod-env:
+    if: ${{ github.ref == 'prod' || github.ref == 'stagge'}}
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "loading prod deploy variables"
+      - name: Run loading
+        run: |
+          echo "REACT_APP_APIKEY=${{ secrets.ENV_APIKEY_PROD }}" >> $GITHUB_ENV
+          echo "REACT_APP_APPID=${{ secrets.ENV_APPID_PROD }}" >> $GITHUB_ENV
+          echo "REACT_APP_AUTHDOMAIN=${{ secrets.ENV_AUTHDOMAIN_PROD }}" >> $GITHUB_ENV
+          echo "REACT_APP_MEASUREMENTID=${{ secrets.ENV_MEASUREMENTID_PROD }}" >> $GITHUB_ENV
+          echo "REACT_APP_MESSANGINGSENDERID=${{ secrets.ENV_MESSANGINGSENDERID_PROD }}" >> $GITHUB_ENV
+          echo "REACT_APP_PROJECTID=${{ secrets.ENV_PROJECTID_PROD }}" >> $GITHUB_ENV
+          echo "REACT_APP_STORAGEBUCKET=${{ secrets.ENV_STORAGEBUCKET_PROD }}" >> $GITHUB_ENV
+      - run: echo "apiKey is ${{env.REACT_APP_APIKEY}} and authDomain is ${{env.REACT_APP_AUTHDOMAIN}}"
