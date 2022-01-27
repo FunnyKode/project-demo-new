@@ -17,7 +17,7 @@ on:
 jobs:
   test-env:
     if: ${{ github.ref == 'dev' }}
-    runs_on: ubuntu-latest
+    runs-on: ubuntu-latest
     steps:
       - run: echo "loading test deploy variables"
       - name: Run loading
