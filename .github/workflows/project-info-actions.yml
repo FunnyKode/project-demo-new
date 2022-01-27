@@ -2,13 +2,11 @@ name: Project-Info-Actions
 on:
   push:
     branches:
-      - main
       - dev
       - stagge
       - prod
   pull_request:
     branches:
-      - main
       - dev
       - stagge
       - prod
