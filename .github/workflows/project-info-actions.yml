@@ -12,6 +12,14 @@ on:
       - dev
       - stagge
       - prod
+  workflow_call:
+    inputs:
+      username: 
+        required: true
+        type: string
+    secrets:
+      ORGANISATION_TOKEN:
+        token: ${{ secrets.PERSONNAL_ACCESS_TOKEN }}
 jobs:
   user-info:
     runs-on: ubuntu-latest
