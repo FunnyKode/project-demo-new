@@ -59,18 +59,18 @@ jobs:
         run: |
           npm ci
           npm run build
-          npm firebase deploy --only hosting -P development --token ${{ secrets.CI_FIREBASE_TOKEN }} --message "$CI_FIREBASE_MESSAGE"
+          npm firebase deploy --only hosting -P development --token ${{ secrets.FIREBASE_TOKEN }} --message "$CI_FIREBASE_MESSAGE"
       - name: Build and Deploy on prod branch
         if: contains(github.ref, 'refs/heads/main') || github.ref == 'refs/heads/prod'
         run: |
           npm ci
           npm run build
-          npm firebase deploy --only hosting -P production --token ${{ secrets.CI_FIREBASE_TOKEN }} --message "$CI_FIREBASE_MESSAGE"
+          npm firebase deploy --only hosting -P production --token ${{ secrets.FIREBASE_TOKEN }} --message "$CI_FIREBASE_MESSAGE"
       - name: Build and Deploy on staging branch
         if: github.ref == 'refs/heads/staging'
         run: |
           npm ci
           npm run build
-          npm firebase deploy --only hosting -P staging --token ${{ secrets.CI_FIREBASE_TOKEN }} --message "$CI_FIREBASE_MESSAGE"
+          npm firebase deploy --only hosting -P staging --token ${{ secrets.FIREBASE_TOKEN }} --message "$CI_FIREBASE_MESSAGE"
 
     
