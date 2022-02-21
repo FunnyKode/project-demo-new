@@ -4,19 +4,19 @@ on:
     branches:
       - main
       - dev
-      - stagge
+      - staging
       - prod
   pull_request:
     branches:
       - main
       - dev
-      - stagge
+      - staging
       - prod
   
 
 jobs:
   test-env:
-    if: contains(github.ref, 'ref/heads/main') || ${{ github.ref == 'ref/heads/main' }}
+    if: contains(github.ref, 'ref/heads/main') || ${{ github.ref == 'ref/heads/dev' }}
     runs-on: ubuntu-latest
     steps:
       - run: echo "loading test deploy variables"
@@ -31,7 +31,7 @@ jobs:
           echo "REACT_APP_STORAGEBUCKET=${{ secrets.ENV_STORAGEBUCKET_DEV }}" >> $GITHUB_ENV
       - run: echo "apiKey is ${{env.REACT_APP_APIKEY}} and authDomain is ${{env.REACT_APP_AUTHDOMAIN}}"
   prod-env:
-    if: ${{ github.ref == 'ref/heads/prod' }}
+    if: ${{ github.ref == 'ref/heads/prod' }} || ${{ github.ref == 'ref/heads/staging'}}
     runs-on: ubuntu-latest
     steps:
       - run: echo "loading prod deploy variables"

@@ -1,0 +1,76 @@
+name: Build and deploy actions
+on:
+  pull_request:
+    branches:
+      - main
+      - dev
+      - staging
+      - prod
+
+jobs:
+  sets:
+    steps:
+      - uses: actions/checkout@v2
+      - name: setting-env-variables
+        env:
+          CI_MESSAGE: ${{ github.event.head_commit.message }}-${{ github.event.head_commit.url }}/checks
+  
+  node-npm-dependencies-caching:
+    name: npm (Node ${{ matrix.node-version }}, ${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node-version: [10.x, 12.x, 14.x, 15.x, 16.x]
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Cache node modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-node-modules
+        with:
+          # npm cache files are stored in `~/.npm` on Linux/macOS
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+
+      - name: Install Dependencies
+        run: npm install
+      - name: Test Dependencies
+        run: npm test
+
+  
+  build-and-deploy-on-specific-branch:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node-version: [10.x, 12.x, 14.x, 15.x, 16.x]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Build and Deploy on dev branch
+        if: contains(github.ref, 'refs/heads/feature/') || github.ref == 'refs/heads/dev'
+        run: |
+          npm ci
+          npm run build
+          npm firebase deploy --only hosting -P development --token ${{ secrets.CI_FIREBASE_TOKEN }} --message "$CI_FIREBASE_MESSAGE"
+      - name: Build and Deploy on prod branch
+        if: contains(github.ref, 'refs/heads/main') || github.ref == 'refs/heads/prod'
+        run: |
+          npm ci
+          npm run build
+          npm firebase deploy --only hosting -P production --token ${{ secrets.CI_FIREBASE_TOKEN }} --message "$CI_FIREBASE_MESSAGE"
+      - name: Build and Deploy on staging branch
+        if: github.ref == 'refs/heads/staging'
+        run: |
+          npm ci
+          npm run build
+          npm firebase deploy --only hosting -P staging --token ${{ secrets.CI_FIREBASE_TOKEN }} --message "$CI_FIREBASE_MESSAGE"
+
+    
