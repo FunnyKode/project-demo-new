@@ -2,16 +2,10 @@ name: Loading Env Varaibles
 on:
   push:
     branches:
-      - main
-      - dev
-      - staging
-      - prod
+      - ma
   pull_request:
     branches:
-      - main
-      - dev
-      - staging
-      - prod
+      - ma
   
 
 jobs:

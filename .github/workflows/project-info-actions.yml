@@ -2,14 +2,10 @@ name: Project-Info-Actions
 on:
   push:
     branches:
-      - dev
-      - staging
-      - prod
+      - de
   pull_request:
     branches:
-      - dev
-      - staging
-      - prod
+      - de
   workflow_call:
     inputs:
       username: 
