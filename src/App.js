@@ -12,7 +12,6 @@ function App() {
         <p>
           Main branch
         </p>
-        </span>
       </header>
     </div>
   );
