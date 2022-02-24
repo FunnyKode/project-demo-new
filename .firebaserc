@@ -1,5 +1,17 @@
 {
   "projects": {
     "default": "project-demo-prod"
+  },
+  "targets": {
+    "project-demo-prod": {
+      "hosting": {
+        "prod": [
+          "project-demo-prod"
+        ],
+        "test": [
+          "project-demo-test"
+        ]
+      }
+    }
   }
 }
