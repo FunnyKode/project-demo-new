@@ -2,7 +2,7 @@ name: Loading Env Varaibles
 on:
   push:
     branches:
-      - ma
+      - main
   pull_request:
     branches:
       - ma
@@ -13,7 +13,7 @@ jobs:
     if: contains(github.ref, 'ref/heads/main') || ${{ github.ref == 'ref/heads/dev' }}
     runs-on: ubuntu-latest
     steps:
-      - run: echo "loading test deploy variables"
+      - run: echo "${{ github.event.head_commit.message }}"
       - name: Run loading
         run: |
           echo "REACT_APP_APIKEY=${{ secrets.ENV_APIKEY_DEV }}" >> $GITHUB_ENV
